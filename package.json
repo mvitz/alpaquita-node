@@ -1,0 +1,8 @@
+{
+  "name": "alpaquita-node",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "matcher": "4.0.0"
+  }
+}

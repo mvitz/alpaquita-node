@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#Run ./mvnw clean package within the given container.
+#
+#Usage:
+#  $ ./run bellsoft/liberica-runtime-container:jdk-21.0.7_9-stream-musl
+
+set -euo pipefail
+IFS=$'\n\t'
+
+IMAGE="${1:?image required as first argument}"
+
+docker run \
+  --rm \
+  --volume "$(pwd):/build" \
+  --volume "$(pwd)/m2:/root/.m2" \
+  --workdir "/build" \
+  "${IMAGE}" \
+  ./mvnw clean package
