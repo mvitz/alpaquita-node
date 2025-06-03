@@ -2,9 +2,9 @@
 
 The `pom.xml` uses `com.github.eirslett:frontend-maven-plugin` to download `node` and `npm` and executes `npm ci` afterwards.
 
-The `run` script starts a given Docker container and executes `./mvnw clean package` in which the above should happen.
+The `run` script starts a given Docker container and executes a given script. By default this is `./execute` which calls `./mvnw clean package` in which the above should happen.
 
-## ./run bellsoft/liberica-openjdk-debian:21.0.7-9
+## ✅ ./run bellsoft/liberica-openjdk-debian:21.0.7-9
 
 Using the debian based liberica image everything works as expected:
 
@@ -37,7 +37,7 @@ Using the debian based liberica image everything works as expected:
 ...
 ```
 
-## ./run bellsoft/liberica-openjdk-alpine:21.0.7-9
+## ⛔️ ./run bellsoft/liberica-openjdk-alpine:21.0.7-9 ./apk
 
 Using the alpine glibc based liberica image the frontend plugin is not able to download node because for some reason it tries to download a musl based node.
 
@@ -56,35 +56,16 @@ Using the alpine glibc based liberica image the frontend plugin is not able to d
 ...
 ```
 
-## ./run bellsoft/liberica-openjdk-alpine-musl:21.0.7-9
+## ⛔️ ./run bellsoft/liberica-openjdk-alpine-musl:21.0.7-9 ./apk
 
 Using the alpine musl based liberica image the same as with the glibc one happens. This is expected.
 
-## ./run bellsoft/liberica-runtime-container:jdk-21.0.7_9-stream-glibc
+## ✅ ./run bellsoft/liberica-runtime-container:jdk-21.0.7_9-stream-glibc ./apk
 
 Using the Alpaquita glibc based liberica image `npm ci` fails because the `libstdc++.so.6` is not found.
+This can be solved by adding libstdc++ using apk with `apk add libstdc++`.
 
-```
-[INFO] Scanning for projects...
-...
-[INFO] --- frontend:1.15.1:install-node-and-npm (install node and npm) @ alpaquite-node ---
-[INFO] Installing node version v22.16.0
-[INFO] Unpacking /root/.m2/repository/com/github/eirslett/node/22.16.0/node-22.16.0-linux-arm64.tar.gz into /build/target/node/tmp
-[INFO] Copying node binary from /build/target/node/tmp/node-v22.16.0-linux-arm64/bin/node to /build/target/node/node
-[INFO] Extracting NPM
-[INFO] Installed node locally.
-[INFO]
-[INFO] --- frontend:1.15.1:npm (npm install) @ alpaquite-node ---
-[INFO] Running 'npm ci' in /build
-[INFO] /build/target/node/node: error while loading shared libraries: libstdc++.so.6: cannot open shared object file: No such file or directory
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD FAILURE
-...
-[ERROR] Failed to execute goal com.github.eirslett:frontend-maven-plugin:1.15.1:npm (npm install) on project alpaquite-node: Failed to run task: 'npm ci' failed. org.apache.commons.exec.ExecuteException: Process exited with an error: 127 (Exit value: 127) -> [Help 1]
-...
-```
-
-## ./run bellsoft/liberica-runtime-container:jdk-21.0.7_9-stream-musl
+## ⛔️ ./run bellsoft/liberica-runtime-container:jdk-21.0.7_9-stream-musl ./apk
 
 Using the Alpaquita based liberica image `npm ci` fails with a `No such file or directory` exception.
 

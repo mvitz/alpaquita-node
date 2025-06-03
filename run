@@ -8,6 +8,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 IMAGE="${1:?image required as first argument}"
+CMD="${2:-./execute}"
 
 docker run \
   --rm \
@@ -15,4 +16,4 @@ docker run \
   --volume "$(pwd)/m2:/root/.m2" \
   --workdir "/build" \
   "${IMAGE}" \
-  ./mvnw clean package
+  "${CMD}"
