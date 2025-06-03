@@ -40,6 +40,8 @@ Using the debian based liberica image everything works as expected:
 ## ⛔️ ./run bellsoft/liberica-openjdk-alpine:21.0.7-9 ./apk
 
 Using the alpine glibc based liberica image the frontend plugin is not able to download node because for some reason it tries to download a musl based node.
+This may be because of https://github.com/eirslett/frontend-maven-plugin/issues/1180 which detects alpine and asumes musl although glibc is present and should be used.
+The download fails because I'm using an MacBook with M4 and there is no unofficial Node.js build for that in combination with musl.
 
 ```
 [INFO] Scanning for projects...
@@ -68,6 +70,7 @@ This can be solved by adding libstdc++ using apk with `apk add libstdc++`.
 ## ⛔️ ./run bellsoft/liberica-runtime-container:jdk-21.0.7_9-stream-musl ./apk
 
 Using the Alpaquita based liberica image `npm ci` fails with a `No such file or directory` exception.
+I assume because of https://github.com/eirslett/frontend-maven-plugin/issues/1180 and this image using Alpaquita the frontend plugin does not detect this as musl and therefore downloads the glibc based node which does not work. Detecting this as musl would run into the download problem because I'm using arm64 as platform.
 
 ```
 [INFO] Scanning for projects...
